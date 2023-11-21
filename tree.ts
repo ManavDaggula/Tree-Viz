@@ -44,6 +44,7 @@ class TreeNode {
 
 class BinarySearchTree {
   root: TreeNode | null;
+  count : number = 0;
 
   isEmpty(): boolean {
     return this.root ? false : true;
@@ -75,6 +76,7 @@ class BinarySearchTree {
     } else {
       this.root = new TreeNode(data);
     }
+    this.count++;
   }
 
   searchNode(data: Number) : TreeNode|void {
@@ -110,7 +112,42 @@ class BinarySearchTree {
       }
       if(ptr == null){
         console.log("No such node found.")
+        return;
       }
+      // if ptr is leaf node
+      if(ptr.left == null && ptr.right==null){
+        if(ptr == this.root){
+          this.root = null;
+        }
+        else{
+          if(preptr?.left == ptr){
+            preptr.left = null
+          }
+          else{
+            preptr.right = null;
+          }
+        }
+      }
+      else if (ptr.left == null && ptr.right!=null){
+        if(preptr?.left == ptr){
+          preptr.left = ptr.right;
+        }
+        else{
+          preptr.right = ptr.right;
+        }
+      }
+      else if (ptr.left != null && ptr.right == null){
+        if(preptr?.left == ptr){
+          preptr.left = ptr.left;
+        }
+        else{
+          preptr.right = ptr.left;
+        }
+      }
+      else{
+        // deleting node has both children
+      }
+      this.count--;
     }
     else{
       console.log("Tree is already empty.");
@@ -135,12 +172,18 @@ function main(): void {
   bst.addNode(3);
   bst.addNode(2);
   bst.addNode(1);
-  bst.addNode(6);
   bst.addNode(5);
-  console.log(bst.searchNode(1));
-  console.log(bst.preorderTraversal());
-  console.log(bst.inorderTraversal());
-  console.log(bst.postorderTraversal());
+  bst.addNode(6);
+  // console.log(bst.searchNode(1));
+  console.log("PreOrder Traversal : " + bst.preorderTraversal());
+  console.log("InOrder Traversal : " + bst.inorderTraversal());
+  console.log("PostOrder Traversal : " + bst.postorderTraversal());
+  console.log(bst.count);
+  // bst.deleteNode();
+  console.log("PreOrder Traversal : " + bst.preorderTraversal());
+  console.log("InOrder Traversal : " + bst.inorderTraversal());
+  console.log("PostOrder Traversal : " + bst.postorderTraversal());
+  console.log(bst.count);
 }
 
 main();
