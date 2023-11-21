@@ -96,7 +96,25 @@ class BinarySearchTree {
   }
   
   deleteNode(data: Number) {
-    
+    if(this.root){
+      let preptr: TreeNode|null = null;
+      let ptr : TreeNode|null = this.root;
+      while(ptr!=null && ptr.data != data){
+        preptr = ptr;
+        if(data < ptr.data){
+          ptr = ptr.left;
+        }
+        else{
+          ptr = ptr.right;
+        }
+      }
+      if(ptr == null){
+        console.log("No such node found.")
+      }
+    }
+    else{
+      console.log("Tree is already empty.");
+    }
   }
 
   inorderTraversal() {
