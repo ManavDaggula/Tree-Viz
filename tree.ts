@@ -44,7 +44,7 @@ class TreeNode {
 
 class BinarySearchTree {
   root: TreeNode | null;
-  count : number = 0;
+  count: number = 0;
 
   isEmpty(): boolean {
     return this.root ? false : true;
@@ -79,77 +79,82 @@ class BinarySearchTree {
     this.count++;
   }
 
-  searchNode(data: Number) : TreeNode|void {
-    if(this.root){
-        let ptr : TreeNode|null= this.root;
-        while(ptr?.data != data && ptr!=null){
-            if(data < ptr.data){
-              ptr = ptr.left;
-            }
-            else{
-              ptr = ptr.right;
-            }
-        }
-        if(ptr?.data == data){
-          return ptr;
-        }
-    }
-      return;
-  }
-  
-  deleteNode(data: Number) {
-    if(this.root){
-      let preptr: TreeNode|null = null;
-      let ptr : TreeNode|null = this.root;
-      while(ptr!=null && ptr.data != data){
-        preptr = ptr;
-        if(data < ptr.data){
+  searchNode(data: Number): TreeNode | void {
+    if (this.root) {
+      let ptr: TreeNode | null = this.root;
+      while (ptr?.data != data && ptr != null) {
+        if (data < ptr.data) {
           ptr = ptr.left;
-        }
-        else{
+        } else {
           ptr = ptr.right;
         }
       }
-      if(ptr == null){
-        console.log("No such node found.")
-        return;
+      if (ptr?.data == data) {
+        return ptr;
       }
-      // if ptr is leaf node
-      if(ptr.left == null && ptr.right==null){
-        if(ptr == this.root){
-          this.root = null;
+    }
+    return;
+  }
+
+  deleteNode(data: Number) {
+    if (this.root) {
+      let preptr: TreeNode | null = null;
+      let ptr: TreeNode | null = this.root;
+      while (ptr != null && ptr.data != data) {
+        preptr = ptr;
+        if (data < ptr.data) {
+          ptr = ptr.left;
+        } else {
+          ptr = ptr.right;
         }
-        else{
-          if(preptr?.left == ptr){
-            preptr.left = null
+      }
+      if (ptr == null) {
+        console.log("No such node found.");
+        return;
+      } else {
+        // if ptr is leaf node
+        if (ptr.left == null && ptr.right == null) {
+          if (ptr == this.root) {
+            this.root = null;
+          } else {
+            if (preptr?.left == ptr) {
+              preptr.left = null;
+            } else {
+              preptr.right = null;
+            }
+          }
+        } else if (ptr.left == null && ptr.right != null) {
+          if (preptr?.left == ptr) {
+            preptr.left = ptr.right;
+          } else {
+            preptr.right = ptr.right;
+          }
+        } else if (ptr.left != null && ptr.right == null) {
+          if (preptr?.left == ptr) {
+            preptr.left = ptr.left;
+          } else {
+            preptr.right = ptr.left;
+          }
+        } else {
+          // deleting node has both children
+          // here we need to find the inorder predescessor (or successor)
+          let ptr1: TreeNode | null = ptr;
+          let ptr2: TreeNode | null = ptr.left;
+          while (ptr2?.right) {
+            ptr1 = ptr2;
+            ptr2 = ptr2.right;
+          }
+          ptr.data = ptr2?.data;
+          if(ptr1.left == ptr2){
+            ptr1.left = ptr2?.left ? ptr2.left : null;
           }
           else{
-            preptr.right = null;
+            ptr1.right = ptr2?.left ? ptr2.left : null;
           }
         }
       }
-      else if (ptr.left == null && ptr.right!=null){
-        if(preptr?.left == ptr){
-          preptr.left = ptr.right;
-        }
-        else{
-          preptr.right = ptr.right;
-        }
-      }
-      else if (ptr.left != null && ptr.right == null){
-        if(preptr?.left == ptr){
-          preptr.left = ptr.left;
-        }
-        else{
-          preptr.right = ptr.left;
-        }
-      }
-      else{
-        // deleting node has both children
-      }
       this.count--;
-    }
-    else{
+    } else {
       console.log("Tree is already empty.");
     }
   }
@@ -174,12 +179,13 @@ function main(): void {
   bst.addNode(1);
   bst.addNode(5);
   bst.addNode(6);
+  bst.addNode(4);
   // console.log(bst.searchNode(1));
   console.log("PreOrder Traversal : " + bst.preorderTraversal());
   console.log("InOrder Traversal : " + bst.inorderTraversal());
   console.log("PostOrder Traversal : " + bst.postorderTraversal());
   console.log(bst.count);
-  // bst.deleteNode();
+  bst.deleteNode(5);
   console.log("PreOrder Traversal : " + bst.preorderTraversal());
   console.log("InOrder Traversal : " + bst.inorderTraversal());
   console.log("PostOrder Traversal : " + bst.postorderTraversal());
