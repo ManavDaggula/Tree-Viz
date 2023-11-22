@@ -40,6 +40,21 @@ class TreeNode {
     arr = [...arr, this.data];
     return arr;
   }
+  nodeHeight(){
+    if(this.left == null && this.right == null){
+      return 0;
+    }
+    else if (this.left!=null && this.right==null){
+      return 1+this.left.nodeHeight();
+    }
+    else if (this.left==null && this.right!=null){
+      return 1+this.right.nodeHeight();
+    }
+    else{
+      return 1 + Math.max(this.left?.nodeHeight(), this.right?.nodeHeight())
+    }
+
+  }
 }
 
 class BinarySearchTree {
@@ -144,7 +159,7 @@ class BinarySearchTree {
             ptr1 = ptr2;
             ptr2 = ptr2.right;
           }
-          ptr.data = ptr2?.data;
+          ptr.data = ptr2.data;
           if(ptr1.left == ptr2){
             ptr1.left = ptr2?.left ? ptr2.left : null;
           }
@@ -152,8 +167,8 @@ class BinarySearchTree {
             ptr1.right = ptr2?.left ? ptr2.left : null;
           }
         }
+        this.count--;
       }
-      this.count--;
     } else {
       console.log("Tree is already empty.");
     }
@@ -170,26 +185,37 @@ class BinarySearchTree {
   postorderTraversal() {
     return this.root ? this.root.postorderTraversal() : [];
   }
+
+  maxDepth(){
+    return this.root?.nodeHeight();
+  }
 }
 
 function main(): void {
   let bst = new BinarySearchTree();
-  bst.addNode(3);
-  bst.addNode(2);
-  bst.addNode(1);
-  bst.addNode(5);
+  bst.addNode(12);
   bst.addNode(6);
+  bst.addNode(35);
+  bst.addNode(23);
+  bst.addNode(45);
   bst.addNode(4);
+  bst.addNode(7);
+  bst.addNode(1);
+  bst.addNode(4);
+  bst.addNode(3);
   // console.log(bst.searchNode(1));
   console.log("PreOrder Traversal : " + bst.preorderTraversal());
   console.log("InOrder Traversal : " + bst.inorderTraversal());
   console.log("PostOrder Traversal : " + bst.postorderTraversal());
   console.log(bst.count);
-  bst.deleteNode(5);
+  // bst.deleteNode(6);
+  // bst.deleteNode(45);
   console.log("PreOrder Traversal : " + bst.preorderTraversal());
   console.log("InOrder Traversal : " + bst.inorderTraversal());
   console.log("PostOrder Traversal : " + bst.postorderTraversal());
   console.log(bst.count);
+  console.log(`Tree Max Depth is : ${bst.maxDepth()}`)
+
 }
 
 main();
