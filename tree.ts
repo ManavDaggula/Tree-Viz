@@ -53,7 +53,50 @@ class TreeNode {
     else{
       return 1 + Math.max(this.left?.nodeHeight(), this.right?.nodeHeight())
     }
+  }
+  getSVGNodeWithChildren(level:number, x:Number, y:Number, width:number, svg:SVGElement){
+    let g = document.createElementNS("http://www.w3.org/2000/svg","g");
+    let circle = document.createElementNS("http://www.w3.org/2000/svg","circle");
+    circle.setAttribute("cx",x.toString())
+    circle.setAttribute("cy",y.toString())
+    circle.setAttribute("r","50")
+    circle.style.fill="yellow";
+    let text = document.createElementNS("http://www.w3.org/2000/svg","text");
+    text.textContent = this.data.toString();
+    text.setAttribute("dominant-baseline","central")
+    text.setAttribute("text-anchor","middle")
+    text.style.fontSize = "300%";
+    text.style.fill="red" // text colour
+    text.setAttribute("x",x.toString())
+    text.setAttribute("y",y.toString())
 
+    if(this.left){
+      let line = document.createElementNS("http://www.w3.org/2000/svg","line");
+      let x2 = x.valueOf()-(width/Math.pow(2,(level+2)))
+      let y2 = y.valueOf()+150
+      line.setAttribute("x1",x.toString())
+      line.setAttribute("y1",y.toString())
+      line.setAttribute("x2",x2.toString())
+      line.setAttribute("y2",y2.toString())
+      line.style.stroke = "red";
+      svg.appendChild(line)
+      this.left.getSVGNodeWithChildren(level+1,x2,y2,width, svg);
+    }
+    if(this.right){
+      let line = document.createElementNS("http://www.w3.org/2000/svg","line");
+      let x2 = x.valueOf()+(width/Math.pow(2,(level+2)))
+      let y2 = y.valueOf()+150
+      line.setAttribute("x1",x.toString())
+      line.setAttribute("y1",y.toString())
+      line.setAttribute("x2",x2.toString())
+      line.setAttribute("y2",y2.toString())
+      line.style.stroke = "red";
+      svg.appendChild(line)
+      this.right.getSVGNodeWithChildren(level+1,x2,y2,width, svg);
+    }
+    g.appendChild(circle)
+    g.appendChild(text)
+    svg.appendChild(g)
   }
 }
 
@@ -189,6 +232,17 @@ class BinarySearchTree {
   maxDepth(){
     return this.root?.nodeHeight();
   }
+
+  getSVGTree(){
+    let svg = document.createElementNS("http://www.w3.org/2000/svg","svg")
+    let depth=this.maxDepth()
+    let width = (Math.pow(2,depth+1)-1)*100
+    let height = (depth+1)*100 + (depth)*50
+    svg.setAttribute("viewBox",`0 0 ${width} ${height}`)
+    svg.setAttribute("xmlns","http://www.w3.org/2000/svg")
+    this.root?.getSVGNodeWithChildren(0,width/2,50,width,svg)
+    return svg;
+  }
 }
 
 function main(): void {
@@ -210,11 +264,14 @@ function main(): void {
   console.log(bst.count);
   // bst.deleteNode(6);
   // bst.deleteNode(45);
-  console.log("PreOrder Traversal : " + bst.preorderTraversal());
-  console.log("InOrder Traversal : " + bst.inorderTraversal());
-  console.log("PostOrder Traversal : " + bst.postorderTraversal());
-  console.log(bst.count);
+  // console.log("PreOrder Traversal : " + bst.preorderTraversal());
+  // console.log("InOrder Traversal : " + bst.inorderTraversal());
+  // console.log("PostOrder Traversal : " + bst.postorderTraversal());
+  // console.log(bst.count);
   console.log(`Tree Max Depth is : ${bst.maxDepth()}`)
+  let svg = bst.getSVGTree();
+  console.log(svg)
+  document.body.appendChild(svg)
 
 }
 
