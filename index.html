@@ -6,6 +6,26 @@
     <title>Tree Vizualiser</title>
 </head>
 <body>
-    <script src="./tree.js" />
+    <script src="./tree.js" ></script>
+    <script>
+        let bst = new BinarySearchTree();
+        console.log(bst)
+        function addNode(){
+            console.log("clicked")
+            if(document.getElementById('nodeValue').value){
+                console.log("added")
+                bst.addNode(new Number(document.getElementById('nodeValue').value));
+                document.getElementById("svgHolder").innerHTML="";
+                document.getElementById("svgHolder").appendChild(bst.getSVGTree())
+            }
+        }
+        // document.body.querySelector("#node-form > button").addEventListener("click",addNode)
+    </script>
+    <div id="node-form">
+        <label for="nodeValue">Add Node</label>    
+        <input type="text" id="nodeValue">
+        <button onclick="addNode()">Add</button>
+    </div>
+    <div id="svgHolder"></div>
 </body>
 </html>
