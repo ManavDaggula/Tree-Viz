@@ -1,4 +1,4 @@
-class TreeNode {
+export class TreeNode {
   data: Number;
   left: TreeNode | null;
   right: TreeNode | null;
@@ -100,9 +100,12 @@ class TreeNode {
   }
 }
 
-class BinarySearchTree {
+export class BinarySearchTree {
   root: TreeNode | null;
   count: number = 0;
+  constructor(){
+    this.root = null;
+  }
 
   isEmpty(): boolean {
     return this.root ? false : true;
@@ -275,4 +278,4 @@ function main(): void {
 
 }
 
-main();
+// main();
