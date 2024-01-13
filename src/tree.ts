@@ -1,11 +1,19 @@
-export class TreeNode {
+class TreeNode {
   data: Number;
   left: TreeNode | null;
   right: TreeNode | null;
+  displayNode : SVGElement;
   constructor(data: Number) {
     this.data = data;
     this.left = null;
     this.right = null;
+    this.displayNode = document.createElementNS("http://www.w3.org/2000/svg","g");
+    let circle = document.createElementNS("http://www.w3.org/2000/svg","circle");
+    circle.setAttribute("r","50");
+    let text = document.createElementNS("http://www.w3.org/2000/svg","text");
+    text.textContent = data.toString();
+    this.displayNode.appendChild(circle);
+    this.displayNode.appendChild(text);
   }
   inorderTraversal(): Number[] {
     let arr: Number[] = [];
@@ -54,8 +62,9 @@ export class TreeNode {
       return 1 + Math.max(this.left?.nodeHeight(), this.right?.nodeHeight())
     }
   }
-  getSVGNodeWithChildren(level:number, x:Number, y:Number, width:number, svg:SVGElement){
+  getSVGNodeWithChildren(level:number, x:Number, y:Number, width:number, svg:SVGElement, lineGroup:SVGElement|null){
     let g = document.createElementNS("http://www.w3.org/2000/svg","g");
+    lineGroup = lineGroup ? lineGroup : document.createElementNS("http://www.w3.org/2000/svg","g");
     let circle = document.createElementNS("http://www.w3.org/2000/svg","circle");
     circle.setAttribute("cx",x.toString())
     circle.setAttribute("cy",y.toString())
@@ -79,8 +88,8 @@ export class TreeNode {
       line.setAttribute("x2",x2.toString())
       line.setAttribute("y2",y2.toString())
       line.style.stroke = "red";
-      svg.appendChild(line)
-      this.left.getSVGNodeWithChildren(level+1,x2,y2,width, svg);
+      lineGroup.appendChild(line)
+      this.left.getSVGNodeWithChildren(level+1,x2,y2,width, svg, lineGroup);
     }
     if(this.right){
       let line = document.createElementNS("http://www.w3.org/2000/svg","line");
@@ -91,20 +100,25 @@ export class TreeNode {
       line.setAttribute("x2",x2.toString())
       line.setAttribute("y2",y2.toString())
       line.style.stroke = "red";
-      svg.appendChild(line)
-      this.right.getSVGNodeWithChildren(level+1,x2,y2,width, svg);
+      lineGroup.appendChild(line)
+      this.right.getSVGNodeWithChildren(level+1,x2,y2,width, svg, lineGroup);
     }
     g.appendChild(circle)
     g.appendChild(text)
+    svg.appendChild(lineGroup)
     svg.appendChild(g)
   }
 }
 
-export class BinarySearchTree {
+class BinarySearchTree {
   root: TreeNode | null;
   count: number = 0;
+  lineGroup: SVGElement;
+  nodeGroup: SVGElement;
   constructor(){
     this.root = null;
+    this.lineGroup = document.createElementNS("http://www.w3.org/2000/svg","g");
+    this.nodeGroup = document.createElementNS("http://www.w3.org/2000/svg","g");
   }
 
   isEmpty(): boolean {
@@ -243,7 +257,7 @@ export class BinarySearchTree {
     let height = (depth+1)*100 + (depth)*50
     svg.setAttribute("viewBox",`0 0 ${width} ${height}`)
     svg.setAttribute("xmlns","http://www.w3.org/2000/svg")
-    this.root?.getSVGNodeWithChildren(0,width/2,50,width,svg)
+    this.root?.getSVGNodeWithChildren(0,width/2,50,width,svg,null)
     return svg;
   }
 }
@@ -278,4 +292,4 @@ function main(): void {
 
 }
 
-// main();
+main();
